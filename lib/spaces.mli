@@ -7,4 +7,4 @@ module R2 :
 
   end
 
-val lp : float -> (module Metric.S with type t = Lacaml.D.Vec.t)
+val lp : float -> (module Metric.S with type t = Owl.Dense.Vector.D.vec)
