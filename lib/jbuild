@@ -3,4 +3,4 @@
 (library
  ((name        gromov)
   (public_name gromov)
-  (libraries (batteries owl))))
+  (libraries (batteries owl camlot))))

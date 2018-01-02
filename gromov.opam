@@ -4,13 +4,15 @@ authors: ["Ilias Garnier"]
 homepage: "https://github.com/igarnier/gromov"
 bug-reports: "https://github.com/igarnier/gromov/issues"
 dev-repo: "git+https://github.com/igarnier/gromov.git"
-license: "Apache-2.0"
+license: "MIT"
 build: [
   ["jbuilder" "build" "-p" name "-j" jobs]
 ]
 depends: [
   "jbuilder"                {build & >= "1.0+beta8"}
   "batteries"
+  "owl"
+  "camlot"
 ]
 available: [ ocaml-version >= "4.04.1" ]
 descr: "
