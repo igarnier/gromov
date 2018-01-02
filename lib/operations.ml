@@ -1,8 +1,8 @@
-module Bounded : functor (X : Metric.S) -> Metric.S with type t = X.t =
+module Bounded : functor (X : Metric.S) -> Metric.S with type elt = X.elt =
   functor (X : Metric.S) ->
     struct
 
-      type t = X.t
+      type elt = X.elt
 
       let dist x y =
         let d = X.dist x y in
@@ -14,14 +14,14 @@ type ('a, 'b) sum =
   | Inl of 'a
   | Inr of 'b
 
-module Sum : functor (X : Metric.S) (Y : Metric.S) -> Metric.S with type t = (X.t,Y.t) sum =
+module Sum : functor (X : Metric.S) (Y : Metric.S) -> Metric.S with type elt = (X.elt,Y.elt) sum =
   functor (X : Metric.S) (Y : Metric.S) ->
   struct
 
     module Xb = Bounded(X)
     module Yb = Bounded(Y)
     
-    type t = (X.t, Y.t) sum
+    type elt = (Xb.elt, Yb.elt) sum
 
     let dist a b =
       match a, b with

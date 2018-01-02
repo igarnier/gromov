@@ -7,7 +7,7 @@ module M = Dense.Matrix.D
 module R2 =
 struct
 
-  type t = { x : float; y : float }
+  type elt = { x : float; y : float }
 
   let dist a b =
     let dx = b.x -. a.x in
@@ -22,12 +22,12 @@ let lpnorm p vec =
   let s = M.sum v in
   (M.get s 0 0) ** (1.0 /. p)
 
-let lp : float -> (module Metric.S with type t = V.vec) =
+let lp : float -> (module Metric.S with type elt = V.vec) =
   fun p ->
     let module M =
       struct
 
-        type t = V.vec
+        type elt = V.vec
         
         let dist a b = lpnorm p (V.sub b a)
 
