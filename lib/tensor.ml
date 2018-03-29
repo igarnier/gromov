@@ -36,7 +36,7 @@ struct
     fun tx ty norm (x1,y1) (x2,y2) ->
       norm [| tx x1 x2; ty y1 y2 |]
 
-  (* We are forced to pick the same type for all elts.*)
+  (* We are forced to pick the same type for all ts.*)
   let nary : 'a. ('a t) array -> norm -> 'a array t =
     fun ts norm x y ->
       norm (Array.mapi (fun i t -> t x.(i) y.(i)) ts)
@@ -47,9 +47,9 @@ struct
         if n = precision then acc
         else
           let t = InfList.peek ts in
-          let xelt = InfList.peek x in
-          let yelt = InfList.peek y in
-          let d    = t xelt yelt in
+          let xt = InfList.peek x in
+          let yt = InfList.peek y in
+          let d    = t xt yt in
           let pow  = float Int.(2 ** n) in
           let acc  = acc +. (d /. (pow *. (1. +. d))) in
           loop (n+1) (InfList.tl ts) (InfList.tl x) (InfList.tl y) acc
@@ -59,35 +59,35 @@ struct
 end
 
 type ('a, 'b) tensor = 
-  (module Metric.S with type elt = 'a) ->
-  (module Metric.S with type elt = 'b) ->
-  (module Metric.S with type elt = 'a * 'b)
+  (module Metric.S with type t = 'a) ->
+  (module Metric.S with type t = 'b) ->
+  (module Metric.S with type t = 'a * 'b)
 
 type holder = [ `Linfty | `Lp of float ]
 
 
-let l1 (type t1 t2) (module X : Metric.S with type elt = t1) (module Y : Metric.S with type elt = t2) =
+let l1 (type t1 t2) (module X : Metric.S with type t = t1) (module Y : Metric.S with type t = t2) =
   (module struct
 
-    type elt = X.elt * Y.elt
+    type t = X.t * Y.t
 
     let dist = Dists.binary X.dist Y.dist Dists.l1
 
-  end : Metric.S with type elt = t1 * t2)
+  end : Metric.S with type t = t1 * t2)
 
-let l2 (type t1 t2) (module X : Metric.S with type elt = t1) (module Y : Metric.S with type elt = t2) =
+let l2 (type t1 t2) (module X : Metric.S with type t = t1) (module Y : Metric.S with type t = t2) =
   (module struct
 
-    type elt = X.elt * Y.elt
+    type t = X.t * Y.t
 
     let dist = Dists.binary X.dist Y.dist Dists.l2
 
-  end : Metric.S with type elt = t1 * t2)
+  end : Metric.S with type t = t1 * t2)
 
-let lp (type t1 t2) holder (module X : Metric.S with type elt = t1) (module Y : Metric.S with type elt = t2) =
+let lp (type t1 t2) holder (module X : Metric.S with type t = t1) (module Y : Metric.S with type t = t2) =
   (module struct
 
-    type elt = X.elt * Y.elt
+    type t = X.t * Y.t
 
     let dist = 
       match holder with
@@ -96,12 +96,12 @@ let lp (type t1 t2) holder (module X : Metric.S with type elt = t1) (module Y : 
       | `Lp p ->
         Dists.binary X.dist Y.dist (Dists.lp p)
 
-  end : Metric.S with type elt = t1 * t2)
+  end : Metric.S with type t = t1 * t2)
 
-let pow (type t) n holder (module X : Metric.S with type elt = t) =
+let pow (type t) n holder (module X : Metric.S with type t = t) =
   (module struct
 
-    type elt = X.elt array
+    type t = X.t array
 
     let dist =
       match holder with
@@ -118,15 +118,15 @@ let pow (type t) n holder (module X : Metric.S with type elt = t) =
         let arr = Array.create n X.dist in
         Dists.nary arr Dists.linfty
 
-  end : Metric.S with type elt = X.elt array)
+  end : Metric.S with type t = X.t array)
 
-(* let infpow (type t) (module X : Metric.S with type elt = t) =
+(* let infpow (type t) (module X : Metric.S with type t = t) =
  *   (module struct
  * 
- *     type elt = X.elt InfList.t
+ *     type t = X.t InfList.t
  *         
  *     let dist = 
  *       let rec d () = InfList.cons X.dist d in
  *       Dists.infty (d ())
  *         
- *   end : Metric.S with type elt = X.elt InfList.t) *)
+ *   end : Metric.S with type t = X.t InfList.t) *)

@@ -6,11 +6,11 @@
 
 open Batteries
 
-module ArrayBased : functor (X : Metric.S) -> Metric.S with type elt = X.elt array =
+module ArrayBased : functor (X : Metric.S) -> Metric.S with type t = X.t array =
   functor (X : Metric.S) ->
   struct
     
-    type elt = X.elt array
+    type t = X.t array
         
     let dist_points set1 set2 i1 i2 =
       let p1 = set1.(i1) in

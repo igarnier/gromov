@@ -1,13 +1,12 @@
 open Owl
 
-module V = Dense.Vector.D
 module M = Dense.Matrix.D
 
 (* 2d eucldidian space*)
 module R2 =
 struct
 
-  type elt = { x : float; y : float }
+  type t = { x : float; y : float }
 
   let dist a b =
     let dx = b.x -. a.x in
@@ -17,19 +16,19 @@ struct
 end
 
 let lpnorm p vec =
-  let d = V.numel vec in
-  let v = M.pow vec (V.create d p) in
+  let d = M.numel vec in
+  let v = M.pow vec (M.create 1 d p) in
   let s = M.sum v in
   (M.get s 0 0) ** (1.0 /. p)
 
-let lp : float -> (module Metric.S with type elt = V.vec) =
+let lp : float -> (module Metric.S with type t = M.mat) =
   fun p ->
     let module M =
       struct
 
-        type elt = V.vec
+        type t = M.mat
         
-        let dist a b = lpnorm p (V.sub b a)
+        let dist a b = lpnorm p (M.sub b a)
 
       end
     in

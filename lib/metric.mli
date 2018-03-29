@@ -1,16 +1,12 @@
 module type S =
   sig
-    type elt
-    val dist : elt -> elt -> float
+    type t
+    val dist : t -> t -> float
   end
 
-module type Finite =
+module type OrderedS =
   sig
     include S
 
-    type t
-
-    val card : t -> int
-
-    val fold : ('a -> elt -> 'a) -> 'a -> t -> 'a
+    val compare : t -> t -> int
   end
