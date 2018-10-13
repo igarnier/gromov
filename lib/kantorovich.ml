@@ -1,10 +1,7 @@
-open Batteries
 
-module Make(X : Metric.OrderedS) =
+module Make(X : Metric.FiniteS) =
   struct
 
-    module M = Map.Make(X)
-
-    type t = float M.t
+    type t = float array
 
   end

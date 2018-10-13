@@ -4,6 +4,12 @@ module type S =
     val dist : t -> t -> float
   end
 
+module type FiniteS =
+  sig
+    include S
+    val elements : t array
+  end
+
 module type OrderedS =
   sig
     include S

@@ -41,20 +41,20 @@ struct
     fun ts norm x y ->
       norm (Array.mapi (fun i t -> t x.(i) y.(i)) ts)
 
-  let infty : 'a.  ('a t) InfList.t -> int -> ('a InfList.t) t =
-    fun ts precision x y ->
-      let rec loop n ts x y acc =
-        if n = precision then acc
-        else
-          let t = InfList.peek ts in
-          let xt = InfList.peek x in
-          let yt = InfList.peek y in
-          let d    = t xt yt in
-          let pow  = float Int.(2 ** n) in
-          let acc  = acc +. (d /. (pow *. (1. +. d))) in
-          loop (n+1) (InfList.tl ts) (InfList.tl x) (InfList.tl y) acc
-      in
-      loop 1 ts x y 0.0
+  (* let infty : 'a.  ('a t) InfList.t -> int -> ('a InfList.t) t =
+   *   fun ts precision x y ->
+   *     let rec loop n ts x y acc =
+   *       if n = precision then acc
+   *       else
+   *         let t = InfList.peek ts in
+   *         let xt = InfList.peek x in
+   *         let yt = InfList.peek y in
+   *         let d    = t xt yt in
+   *         let pow  = float Int.(2 ** n) in
+   *         let acc  = acc +. (d /. (pow *. (1. +. d))) in
+   *         loop (n+1) (InfList.tl ts) (InfList.tl x) (InfList.tl y) acc
+   *     in
+   *     loop 1 ts x y 0.0 *)
 
 end
 
